@@ -11,7 +11,7 @@ document.getElementById('searchBtn').addEventListener('click', () => {
 });
 
 async function fetchRecipes(ingredients) {
-    const url = `${apiUrl}?ingredients=${ingredients}&number=10&apiKey=${apiKey}`;
+    const url = `${apiUrl}?ingredients=${ingredients}&number=15&apiKey=${apiKey}`;
     try {
         const response = await fetch(url);
         const recipes = await response.json();
