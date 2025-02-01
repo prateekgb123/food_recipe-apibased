@@ -9,7 +9,17 @@ document.getElementById('searchBtn').addEventListener('click', () => {
         alert('Please enter some ingredients!');
     }
 });
-
+document.getElementById('searchBtn').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+    const query = document.getElementById('search').value.trim();
+    
+    if (query) {
+        fetchRecipes(query);
+    } else {
+        alert('Please enter some ingredients!');
+    }
+}
+});
 async function fetchRecipes(ingredients) {
     const url = `${apiUrl}?ingredients=${ingredients}&number=15&apiKey=${apiKey}`;
     try {
