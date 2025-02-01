@@ -1,24 +1,23 @@
 const apiKey = 'daad66ed20794a89bdab432f80652162'; 
 const apiUrl = 'https://api.spoonacular.com/recipes/findByIngredients';
 
-document.getElementById('searchBtn').addEventListener('click', () => {
+const handleSearch = () => {
     const query = document.getElementById('search').value.trim();
     if (query) {
         fetchRecipes(query);
     } else {
         alert('Please enter some ingredients!');
     }
-});
-document.getElementById('searchBtn').addEventListener('keydown', (event) => {
+};
+
+
+document.getElementById('searchBtn').addEventListener('click', handleSearch);
+
+
+document.getElementById('search').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
-    const query = document.getElementById('search').value.trim();
-    
-    if (query) {
-        fetchRecipes(query);
-    } else {
-        alert('Please enter some ingredients!');
+        handleSearch();
     }
-}
 });
 async function fetchRecipes(ingredients) {
     const url = `${apiUrl}?ingredients=${ingredients}&number=15&apiKey=${apiKey}`;
