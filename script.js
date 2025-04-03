@@ -48,5 +48,5 @@ function displayRecipes(recipes) {
 
         `;
         resultsDiv.appendChild(recipeDiv);
-    });
+    });    
 }
