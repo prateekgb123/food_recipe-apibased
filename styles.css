@@ -195,7 +195,7 @@ body {
     text-decoration: underline;
 }
 @media (max-width: 480px) {
-/* Base Styles */
+
 * {
     margin: 0;
     padding: 0;
@@ -207,7 +207,7 @@ body {
     color: #333;
 }
 
-/* Navbar */
+
 .navbar {
     padding: 8px;
     display: flex;
@@ -228,7 +228,7 @@ body {
     padding: 5px;
 }
 
-/* Logo */
+
 .logo {
     display: flex;
     align-items: center;
@@ -242,7 +242,6 @@ body {
     font-size: 15px;
 }
 
-/* Details Section */
 .details {
     padding: 20px 8px;
 }
@@ -253,7 +252,6 @@ body {
     font-size: 12px;
 }
 
-/* Search Bar */
 .search-bar {
     max-width: 80%;
     flex-direction: column;
@@ -272,7 +270,7 @@ body {
     height: 30px;
 }
 
-/* Recipes Section */
+
 .recipes {
     padding: 12px;
 }
@@ -300,7 +298,6 @@ body {
     font-size: 10px;
 }
 
-/* Results */
 #results {
     flex-direction: column;
     padding: 8px;
