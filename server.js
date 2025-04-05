@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 
 
-app.post("/api/auth/signup", async (req, res) => {
+app.post("https://food-recipe-apibased.vercel.app/api/auth/signup", async (req, res) => {
     try {
         const { username, email, password } = req.body;
         if (!username || !email || !password) {
@@ -55,7 +55,7 @@ app.post("/api/auth/signup", async (req, res) => {
 
 
 
-app.post("/api/auth/login", async (req, res) => {
+app.post("https://food-recipe-apibased.vercel.app/api/auth/login", async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
@@ -83,7 +83,7 @@ const authenticate = (req, res, next) => {
 };
 
 
-app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
+app.get("https://food-recipe-apibased.vercel.app/api/recipes/findByIngredients", authenticate, async (req, res) => {
     try {
         console.log("User:", req.user.username, "requested recipes.");
         const { ingredients, number = 15 } = req.query;
