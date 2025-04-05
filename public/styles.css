@@ -265,12 +265,12 @@ body {
 .search-bar input {
     font-size: 9px;
     padding: 5px;
-    height: 25px;
+    height: 27px;
 }
 .search-bar button {
     padding: 5px;
     font-size: 9px;
-    height: 24px;
+    height: 26px;
 }
 .recipes {
     padding: 12px;
