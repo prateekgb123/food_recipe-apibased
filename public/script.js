@@ -14,6 +14,7 @@ async function handleSearch() {
 
     if (!token) {
         alert("Please log in first to search for recipes.");
+        window.location.href = "sign.html";
         return;
     }
 
