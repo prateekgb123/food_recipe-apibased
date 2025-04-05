@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// User Schema
+
 const UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, required: true },
     email: { type: String, unique: true, required: true },
@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
-// Signup Route
+
 app.post("/api/auth/signup", async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -54,7 +54,7 @@ app.post("/api/auth/signup", async (req, res) => {
 });
 
 
-// Login Route
+
 app.post("/api/auth/login", async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -68,7 +68,7 @@ app.post("/api/auth/login", async (req, res) => {
     res.json({ token, username: user.username });
 });
 
-// Middleware to check authentication
+
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -82,7 +82,7 @@ const authenticate = (req, res, next) => {
     }
 };
 
-// Recipes API - Requires Authentication
+
 app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
     try {
         console.log("User:", req.user.username, "requested recipes.");
@@ -99,7 +99,7 @@ app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
     }
 });
 
-// Serve Frontend
+
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

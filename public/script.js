@@ -29,7 +29,7 @@ async function fetchRecipes(ingredients, token) {
         const response = await fetch(`/api/recipes/findByIngredients?ingredients=${ingredients}&number=15`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`, // Send JWT token
+                'Authorization': `Bearer ${token}`, 
                 'Content-Type': 'application/json',
             }
         });
@@ -37,7 +37,7 @@ async function fetchRecipes(ingredients, token) {
         if (response.status === 401) {
             alert("Session expired. Please log in again.");
             localStorage.removeItem("token");
-            window.location.href = "sign.html"; // Redirect to login page
+            window.location.href = "sign.html"; 
             return;
         }
 
