@@ -15,8 +15,7 @@
             height: 100vh;
             margin: 0;
         }
-
-
+    
         .container {
             background: white;
             padding: 20px;
@@ -25,21 +24,20 @@
             text-align: center;
             width: 350px;
         }
-
-
+    
         form {
             display: flex;
             flex-direction: column;
             margin-top: 10px;
         }
-
+    
         input {
             padding: 10px;
             margin: 8px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
+    
         button {
             background-color: #28a745;
             color: white;
@@ -50,36 +48,51 @@
             border-radius: 5px;
             font-size: 16px;
         }
-
+    
         button:hover {
             background-color: #218838;
         }
-
-
+    
         .toggle-link {
             color: #007bff;
             cursor: pointer;
             margin-top: 10px;
         }
-
+    
         .toggle-link:hover {
             text-decoration: underline;
         }
-
+    
         #message {
             margin-top: 10px;
             color: red;
             font-size: 14px;
         }
-        #logoutBtn{
-            background-color:red;
+    
+        #logoutBtn {
+            background-color: red;
+            margin:10px;
         }
-        @media (max-width: 480px) {
-            #message{
-                font-size: 10px;
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+    
+            .container {
+                width: 100%;
+                box-sizing: border-box;
+            }
+    
+            input,
+            button {
+                font-size: 14px;
+            }
+            #msg{
+                font-size: 17px;
             }
         }
     </style>
+    
 </head>
 
 <body>
@@ -193,7 +206,7 @@
 
             function showLoggedInState(username) {
                 document.body.innerHTML = `
-            <h2>You are logged in as ${username}</h2>
+            <h2 id="msg">You are logged in as ${username}</h2>
             <button id="logoutBtn">Logout</button>
         `;
 
