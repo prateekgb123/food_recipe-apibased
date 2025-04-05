@@ -26,7 +26,7 @@ async function handleSearch() {
 
 async function fetchRecipes(ingredients, token) {
     try {
-        const response = await fetch(`/api/recipes/findByIngredients?ingredients=${ingredients}&number=15`, {
+        const response = await fetch(`https://food-recipe-apibased.vercel.app/api/recipes/findByIngredients?ingredients=${ingredients}&number=15`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`, 
