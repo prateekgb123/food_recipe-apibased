@@ -1,5 +1,3 @@
-const apiKey = "daad66ed20794a89bdab432f80652162"; 
-const apiUrl = '/api/recipes/findByIngredients'; 
 
 document.getElementById('searchBtn').addEventListener('click', handleSearch);
 document.getElementById('search').addEventListener('keydown', (event) => {
