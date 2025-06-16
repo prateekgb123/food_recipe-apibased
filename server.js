@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const path = require("path");
 const axios=require("axios");
+const Favorite = require("./models/Favorite");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -98,7 +99,33 @@ app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
         res.status(500).json({ error: "Failed to fetch recipes" });
     }
 });
+app.post("/api/favorites", authenticate, async (req, res) => {
+    try {
+        const { recipeId, title, image } = req.body;
+        const newFav = new Favorite({
+            userId: req.user.userId,
+            recipeId,
+            title,
+            image,
+        });
+        await newFav.save();
+        res.json({ message: "Recipe added to favorites!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to save favorite." });
+    }
+});
 
+// Get all favorites
+app.get("/api/favorites", authenticate, async (req, res) => {
+    try {
+        const favorites = await Favorite.find({ userId: req.user.userId });
+        res.json(favorites);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to fetch favorites." });
+    }
+});
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 
