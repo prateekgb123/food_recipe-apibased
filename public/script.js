@@ -27,7 +27,7 @@ async function fetchRecipes(ingredients, token) {
         const response = await fetch(`/api/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&number=15`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`, 
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }
         });
@@ -35,12 +35,12 @@ async function fetchRecipes(ingredients, token) {
         if (response.status === 401) {
             alert("Session expired. Please log in again.");
             localStorage.removeItem("token");
-            window.location.href = "sign.html"; 
+            window.location.href = "sign.html";
             return;
         }
 
         const recipes = await response.json();
-        displayRecipes(recipes);
+        displayRecipes(recipes, false);
     } catch (error) {
         console.error('Error fetching recipes:', error);
     }
@@ -71,6 +71,30 @@ async function saveToFavorites(recipeId, title, image) {
     }
 }
 
+async function removeFromFavorites(recipeId) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Please log in to remove favorites.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/favorites/${recipeId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+        alert(data.message || "Removed from favorites!");
+        loadFavorites(); // Refresh after removal
+    } catch (error) {
+        console.error("Error removing favorite:", error);
+        alert("Something went wrong while removing the recipe.");
+    }
+}
+
 async function loadFavorites() {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -83,24 +107,23 @@ async function loadFavorites() {
             headers: { "Authorization": `Bearer ${token}` }
         });
         const favorites = await response.json();
-        displayRecipes(favorites);
+        displayRecipes(favorites, true); // isFavorite = true
     } catch (err) {
         console.error("Error loading favorites:", err);
         alert("Could not load favorites.");
     }
 }
 
-function displayRecipes(recipes) {
+function displayRecipes(recipes, isFavorite = false) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '';
 
-    if (recipes.length === 0) {
+    if (!recipes || recipes.length === 0) {
         resultsDiv.innerHTML = '<p>No recipes found. Try different ingredients.</p>';
         return;
     }
 
     recipes.forEach(recipe => {
-        // Handle potential undefined fields safely
         const title = recipe.title || "Untitled";
         const image = recipe.image || "";
         const id = recipe.recipeId || recipe.id || null;
@@ -112,18 +135,20 @@ function displayRecipes(recipes) {
         const recipeDiv = document.createElement('div');
         recipeDiv.classList.add('recipe');
 
-        // Use dataset for passing data to onclick safely
         recipeDiv.innerHTML = `
             <img src="${image}" alt="${title}">
             <h3>${title}</h3>
             <a href="${viewUrl}" target="_blank">View Recipe</a>
-            <button onclick="saveToFavorites('${id}', \`${escapeQuotes(title)}\`, \`${escapeQuotes(image)}\`)">❤️ Save</button>
+            ${isFavorite
+                ? `<button onclick="removeFromFavorites('${id}')">🗑️ Remove</button>`
+                : `<button onclick="saveToFavorites('${id}', \`${escapeQuotes(title)}\`, \`${escapeQuotes(image)}\`)">❤️ Save</button>`
+            }
         `;
 
         resultsDiv.appendChild(recipeDiv);
     });
 
-    // Add view favorites button if not already added
+    // View favorites button
     if (!document.getElementById('viewFavBtn')) {
         const favBtn = document.createElement('button');
         favBtn.id = 'viewFavBtn';
@@ -134,7 +159,6 @@ function displayRecipes(recipes) {
     }
 }
 
-// Utility to safely escape quotes in HTML attributes
 function escapeQuotes(str) {
     return String(str).replace(/`/g, '\\`').replace(/"/g, '\\"').replace(/'/g, "\\'");
 }

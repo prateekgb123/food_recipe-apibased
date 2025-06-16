@@ -29,7 +29,7 @@ body {
     color: white;
     padding: 15px 20px;
     display: flex;
-    gap:720px;
+    gap:600px;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
