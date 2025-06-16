@@ -6,33 +6,31 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const path = require("path");
 const axios = require("axios");
-const Favorite = require("./models/Favorite"); // Ensure this model is correct
+const Favorite = require("./models/Favorite");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Connect to MongoDB
-mongoose.connect(MONGO_URI, { dbName: 'FOOD' })
+// Database connection
+mongoose.connect(MONGO_URI, { dbName: "FOOD" })
     .then(() => console.log("✅ MongoDB connected"))
     .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
 
-// User Schema & Model
+// Schema & Model
 const UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, required: true },
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
 });
-
 const User = mongoose.model("User", UserSchema);
 
-// Signup Route
+// Auth routes
 app.post("/api/auth/signup", async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -56,7 +54,6 @@ app.post("/api/auth/signup", async (req, res) => {
     }
 });
 
-// Login Route
 app.post("/api/auth/login", async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -70,7 +67,7 @@ app.post("/api/auth/login", async (req, res) => {
     res.json({ token, username: user.username });
 });
 
-// Authentication Middleware
+// JWT Auth middleware
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -84,7 +81,7 @@ const authenticate = (req, res, next) => {
     }
 };
 
-// Recipe Search Endpoint
+// Search Recipes
 app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
     try {
         const { ingredients, number = 15 } = req.query;
@@ -100,7 +97,7 @@ app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
     }
 });
 
-// Save Favorite Recipe
+// Add to favorites
 app.post("/api/favorites", authenticate, async (req, res) => {
     try {
         const { recipeId, title, image } = req.body;
@@ -124,7 +121,7 @@ app.post("/api/favorites", authenticate, async (req, res) => {
     }
 });
 
-// Get All Favorite Recipes
+// Get favorites
 app.get("/api/favorites", authenticate, async (req, res) => {
     try {
         const favorites = await Favorite.find({ userId: req.user.userId });
@@ -135,7 +132,36 @@ app.get("/api/favorites", authenticate, async (req, res) => {
     }
 });
 
-// Serve frontend
+// Remove from favorites
+app.delete("/api/favorites/:recipeId", authenticate, async (req, res) => {
+    try {
+        const { recipeId } = req.params;
+
+        const result = await Favorite.findOneAndDelete({
+            userId: req.user.userId,
+            recipeId
+        });
+
+        if (!result) {
+            return res.status(404).json({ message: "Favorite not found." });
+        }
+
+        res.json({ message: "Recipe removed from favorites!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to remove favorite." });
+    }
+});
+
+// Fallback for unmatched API routes
+app.use("/api", (req, res) => {
+    res.status(404).json({ message: "API route not found" });
+});
+
+// Static file handler (AFTER all API routes)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Frontend entry
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 
 // Start server

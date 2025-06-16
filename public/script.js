@@ -43,6 +43,7 @@ async function fetchRecipes(ingredients, token) {
         displayRecipes(recipes, false);
     } catch (error) {
         console.error('Error fetching recipes:', error);
+        alert("Error fetching recipes.");
     }
 }
 
@@ -86,9 +87,21 @@ async function removeFromFavorites(recipeId) {
             }
         });
 
+        const contentType = response.headers.get("content-type");
+        if (!response.ok) {
+            if (contentType && contentType.includes("application/json")) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to remove favorite.");
+            } else {
+                const rawText = await response.text();
+                console.error("Unexpected response:", rawText);
+                throw new Error("Unexpected server response (not JSON).");
+            }
+        }
+
         const data = await response.json();
         alert(data.message || "Removed from favorites!");
-        loadFavorites(); // Refresh after removal
+        loadFavorites(); // Refresh
     } catch (error) {
         console.error("Error removing favorite:", error);
         alert("Something went wrong while removing the recipe.");
@@ -106,6 +119,19 @@ async function loadFavorites() {
         const response = await fetch("/api/favorites", {
             headers: { "Authorization": `Bearer ${token}` }
         });
+
+        const contentType = response.headers.get("content-type");
+        if (!response.ok) {
+            if (contentType && contentType.includes("application/json")) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to load favorites.");
+            } else {
+                const rawText = await response.text();
+                console.error("Unexpected response:", rawText);
+                throw new Error("Unexpected server response (not JSON).");
+            }
+        }
+
         const favorites = await response.json();
         displayRecipes(favorites, true); // isFavorite = true
     } catch (err) {
@@ -138,7 +164,7 @@ function displayRecipes(recipes, isFavorite = false) {
         recipeDiv.innerHTML = `
             <img src="${image}" alt="${title}">
             <h3>${title}</h3>
-            <a href="${viewUrl}" target="_blank">View Recipe</a>
+            <p><a href="${viewUrl}" target="_blank" class="view-link">View Recipe</a></p>
             ${isFavorite
                 ? `<button onclick="removeFromFavorites('${id}')">🗑️ Remove</button>`
                 : `<button onclick="saveToFavorites('${id}', \`${escapeQuotes(title)}\`, \`${escapeQuotes(image)}\`)">❤️ Save</button>`
@@ -147,16 +173,6 @@ function displayRecipes(recipes, isFavorite = false) {
 
         resultsDiv.appendChild(recipeDiv);
     });
-
-    // View favorites button
-    if (!document.getElementById('viewFavBtn')) {
-        const favBtn = document.createElement('button');
-        favBtn.id = 'viewFavBtn';
-        favBtn.textContent = "⭐ View Favorites";
-        favBtn.style.marginTop = "20px";
-        favBtn.onclick = loadFavorites;
-        resultsDiv.appendChild(favBtn);
-    }
 }
 
 function escapeQuotes(str) {
