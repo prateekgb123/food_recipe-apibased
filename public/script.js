@@ -1,4 +1,3 @@
-
 document.getElementById('searchBtn').addEventListener('click', handleSearch);
 document.getElementById('search').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -25,7 +24,7 @@ async function handleSearch() {
 
 async function fetchRecipes(ingredients, token) {
     try {
-        const response = await fetch(`/api/recipes/findByIngredients?ingredients=${ingredients}&number=15`, {
+        const response = await fetch(`/api/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&number=15`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`, 
@@ -46,6 +45,7 @@ async function fetchRecipes(ingredients, token) {
         console.error('Error fetching recipes:', error);
     }
 }
+
 async function saveToFavorites(recipeId, title, image) {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -70,6 +70,7 @@ async function saveToFavorites(recipeId, title, image) {
         alert("Something went wrong.");
     }
 }
+
 async function loadFavorites() {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -82,9 +83,10 @@ async function loadFavorites() {
             headers: { "Authorization": `Bearer ${token}` }
         });
         const favorites = await response.json();
-        displayRecipes(favorites);  // reuse same display function
+        displayRecipes(favorites);
     } catch (err) {
         console.error("Error loading favorites:", err);
+        alert("Could not load favorites.");
     }
 }
 
@@ -98,15 +100,41 @@ function displayRecipes(recipes) {
     }
 
     recipes.forEach(recipe => {
+        // Handle potential undefined fields safely
+        const title = recipe.title || "Untitled";
+        const image = recipe.image || "";
+        const id = recipe.recipeId || recipe.id || null;
+
+        const viewUrl = id
+            ? `https://spoonacular.com/recipes/${encodeURIComponent(title.replace(/ /g, '-').toLowerCase())}-${id}`
+            : "#";
+
         const recipeDiv = document.createElement('div');
         recipeDiv.classList.add('recipe');
+
+        // Use dataset for passing data to onclick safely
         recipeDiv.innerHTML = `
-    <img src="${recipe.image}" alt="${recipe.title}">
-    <h3>${recipe.title}</h3>
-    <a href="https://spoonacular.com/recipes/${recipe.title.replace(/ /g, '-').toLowerCase()}-${recipe.id}" target="_blank">View Recipe</a>
-    <button onclick="saveToFavorites('${recipe.id}', '${recipe.title}', '${recipe.image}')">❤️ Save</button>
-`;
+            <img src="${image}" alt="${title}">
+            <h3>${title}</h3>
+            <a href="${viewUrl}" target="_blank">View Recipe</a>
+            <button onclick="saveToFavorites('${id}', \`${escapeQuotes(title)}\`, \`${escapeQuotes(image)}\`)">❤️ Save</button>
+        `;
 
         resultsDiv.appendChild(recipeDiv);
     });
+
+    // Add view favorites button if not already added
+    if (!document.getElementById('viewFavBtn')) {
+        const favBtn = document.createElement('button');
+        favBtn.id = 'viewFavBtn';
+        favBtn.textContent = "⭐ View Favorites";
+        favBtn.style.marginTop = "20px";
+        favBtn.onclick = loadFavorites;
+        resultsDiv.appendChild(favBtn);
+    }
+}
+
+// Utility to safely escape quotes in HTML attributes
+function escapeQuotes(str) {
+    return String(str).replace(/`/g, '\\`').replace(/"/g, '\\"').replace(/'/g, "\\'");
 }

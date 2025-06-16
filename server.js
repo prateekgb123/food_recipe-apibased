@@ -5,23 +5,25 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const path = require("path");
-const axios=require("axios");
-const Favorite = require("./models/Favorite");
+const axios = require("axios");
+const Favorite = require("./models/Favorite"); // Ensure this model is correct
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// Connect to MongoDB
 mongoose.connect(MONGO_URI, { dbName: 'FOOD' })
-    .then(() => console.log("MongoDB connected"))
-    .catch((err) => console.error("MongoDB connection error:", err));
+    .then(() => console.log("✅ MongoDB connected"))
+    .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-
+// User Schema & Model
 const UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, required: true },
     email: { type: String, unique: true, required: true },
@@ -30,7 +32,7 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
-
+// Signup Route
 app.post("/api/auth/signup", async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -54,8 +56,7 @@ app.post("/api/auth/signup", async (req, res) => {
     }
 });
 
-
-
+// Login Route
 app.post("/api/auth/login", async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -69,7 +70,7 @@ app.post("/api/auth/login", async (req, res) => {
     res.json({ token, username: user.username });
 });
 
-
+// Authentication Middleware
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -83,10 +84,9 @@ const authenticate = (req, res, next) => {
     }
 };
 
-
+// Recipe Search Endpoint
 app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
     try {
-        console.log("User:", req.user.username, "requested recipes.");
         const { ingredients, number = 15 } = req.query;
         if (!ingredients) return res.status(400).json({ error: "Missing ingredients parameter" });
 
@@ -99,9 +99,17 @@ app.get("/api/recipes/findByIngredients", authenticate, async (req, res) => {
         res.status(500).json({ error: "Failed to fetch recipes" });
     }
 });
+
+// Save Favorite Recipe
 app.post("/api/favorites", authenticate, async (req, res) => {
     try {
         const { recipeId, title, image } = req.body;
+
+        const existing = await Favorite.findOne({ userId: req.user.userId, recipeId });
+        if (existing) {
+            return res.status(400).json({ message: "Already in favorites." });
+        }
+
         const newFav = new Favorite({
             userId: req.user.userId,
             recipeId,
@@ -116,7 +124,7 @@ app.post("/api/favorites", authenticate, async (req, res) => {
     }
 });
 
-// Get all favorites
+// Get All Favorite Recipes
 app.get("/api/favorites", authenticate, async (req, res) => {
     try {
         const favorites = await Favorite.find({ userId: req.user.userId });
@@ -127,6 +135,8 @@ app.get("/api/favorites", authenticate, async (req, res) => {
     }
 });
 
+// Serve frontend
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start server
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
