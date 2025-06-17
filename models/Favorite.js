@@ -7,7 +7,7 @@ const FavoriteSchema = new mongoose.Schema({
         required: true
     },
     recipeId: {
-        type: String, // or Number if recipeId is numeric from Spoonacular
+        type: String, 
         required: true
     },
     title: {
@@ -19,7 +19,7 @@ const FavoriteSchema = new mongoose.Schema({
         required: true
     }
 }, {
-    timestamps: true // Optional: Adds createdAt and updatedAt fields
+    timestamps: true 
 });
 
 module.exports = mongoose.model("Favorite", FavoriteSchema);
