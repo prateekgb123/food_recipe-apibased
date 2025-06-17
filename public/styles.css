@@ -200,23 +200,23 @@ body {
 /* MOBILE RESPONSIVE FIX */
 @media (max-width: 480px) {
     .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
     }
 
     .navbar .logo {
         justify-content: center;
-        gap: 5px;
+        gap: 2px;
     }
 
     .navbar .logo-image {
-        height: 25px;
-        width: 25px;
+        height: 15px;
+        width: 15px;
     }
 
     .navbar .logo-text {
-        font-size: 18px;
+        font-size: 10px;
     }
 
     .navbar .links {
@@ -226,7 +226,7 @@ body {
     }
 
     .navbar .links a {
-        font-size: 12px;
+        font-size: 8px;
         margin: 5px;
     }
 

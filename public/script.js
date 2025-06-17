@@ -167,7 +167,7 @@ function displayRecipes(recipes, isFavorite = false) {
             <p><a href="${viewUrl}" target="_blank" class="view-link">View Recipe</a></p>
             ${isFavorite
                 ? `<button onclick="removeFromFavorites('${id}')">🗑️ Remove</button>`
-                : `<button onclick="saveToFavorites('${id}', \`${escapeQuotes(title)}\`, \`${escapeQuotes(image)}\`)">❤️ Save</button>`
+                : `<button onclick="saveToFavorites('${id}', \`${escapeQuotes(title)}\`, \`${escapeQuotes(image)}\`)">❤️ Add to Favorites</button>`
             }
         `;
 
