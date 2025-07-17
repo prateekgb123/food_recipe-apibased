@@ -5,35 +5,6 @@ body {
   background-color: #f2f2f2;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #343a40;
-  padding: 10px 20px;
-  color: white;
-}
-
-.nav-logo {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.nav-links .nav-btn {
-  margin-left: 10px;
-  padding: 6px 12px;
-  font-size: 14px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.nav-links .nav-btn:hover {
-  background-color: #0056b3;
-}
-
 .wrapper {
   max-width: 900px;
   margin: 0 auto;
@@ -106,5 +77,30 @@ button:hover {
 .main-content {
   flex: 1;
   padding: 1rem;
-  background-color: #fffaf2; /* optional soft background */
+  background-color: #fffaf2;
+}
+
+/* ✅ Responsive styles for content (not navbar) */
+@media (max-width: 768px) {
+  .auth-input {
+    padding: 4px;
+    font-size: 12px;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-input {
+    padding: 4px;
+    font-size: 11px;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
 }

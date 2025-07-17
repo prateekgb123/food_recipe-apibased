@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
   min-height: 75vh;
 }
 
@@ -43,4 +44,25 @@
 
 .auth-form button:hover {
   background-color: #218838;
+}
+
+/* ✅ Responsive improvements */
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 20px;
+  }
+
+  .auth-form h2 {
+    font-size: 20px;
+  }
+
+  .auth-form button {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  .auth-form input {
+    font-size: 13px;
+    padding: 10px;
+  }
 }

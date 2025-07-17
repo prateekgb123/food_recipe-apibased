@@ -21,8 +21,8 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <Link className="btn nav-btn" to="/login">Login</Link>
-            <Link className="btn nav-btn" to="/signup">Signup</Link>
+            <Link className="btn nav-btn1" to="/login">Login</Link>
+            <Link className="btn nav-btn2" to="/signup">Signup</Link>
           </>
         )}
       </div>
