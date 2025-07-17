@@ -1,22 +1,28 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from './AuthContexts';
+import './Navbar.css'; 
+import logo from './food.png'; 
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
+
   return (
     <nav className="navbar">
-      <h1>🍲 FoodRecipe</h1>
-      <div>
+      <div className="navbar-logo">
+        <img src={logo} alt="logo" className="logo-img" />
+        <h1>FoodRecipe</h1>
+      </div>
+      <div className="navbar-links">
         {user ? (
           <>
-            <span>Welcome, {user.username}</span>
-            <button onClick={logout}>Logout</button>
+            <span className="welcome-msg">Welcome, {user.username}</span>
+            <button className="btn logout-btn" onClick={logout}>Logout</button>
           </>
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Signup</Link>
+            <Link className="btn nav-btn" to="/login">Login</Link>
+            <Link className="btn nav-btn" to="/signup">Signup</Link>
           </>
         )}
       </div>
