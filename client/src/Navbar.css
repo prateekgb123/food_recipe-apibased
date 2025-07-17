@@ -1,5 +1,4 @@
-/* Navbar.css */
-/* Reset default margin and padding */
+
 * {
   margin: 0;
   padding: 0;
@@ -11,9 +10,9 @@ body {
   padding: 0;
 }
 
-/* Navbar container */
+
 .navbar {
-  background-color: #ff6f00; /* Deep orange */
+  background-color: #ff6f00; 
   width: 100%;
   height: 70px;
   padding: 0 1.5rem;
@@ -27,8 +26,6 @@ body {
   z-index: 1000;
   box-sizing: border-box;
 }
-
-/* Logo container */
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -41,7 +38,6 @@ body {
   object-fit: contain;
 }
 
-/* Brand name */
 .navbar-logo h1 {
   margin: 0;
   font-size: 1.6rem;
@@ -50,14 +46,13 @@ body {
   line-height: 1;
 }
 
-/* Right-side links or buttons */
 .navbar-links {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-/* Welcome text */
+
 .welcome-msg {
   font-weight: 500;
   color: white;
@@ -65,7 +60,7 @@ body {
   margin: 0;
 }
 
-/* Common button styles */
+
 .btn {
   padding: 0.35rem 0.8rem;
   border-radius: 18px;
@@ -77,19 +72,19 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* Login/Signup buttons */
+
 .nav-btn {
-  background-color: #ffffff;
-  color: #ff6f00;
+  background-color: #039e15;
+  color: #f8f8f7;
 }
 
-/* Logout button */
+
 .logout-btn {
-  background-color: #e65100;
+  background-color: #ff2002;
   color: white;
 }
 
-/* Hover effect */
+
 .btn:hover {
   opacity: 0.95;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
