@@ -55,6 +55,36 @@ app.post('/api/auth/login', async (req, res) => {
     res.status(500).json({ error: 'Login failed' });
   }
 });
+const API_KEY = process.env.SPOONACULAR_API_KEY;
+
+app.get('/api/featured', async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://api.spoonacular.com/recipes/random?number=6&apiKey=${API_KEY}`
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching featured:', err);
+    res.status(500).json({ error: 'Failed to fetch featured recipes' });
+  }
+});
+
+app.get('/api/search', async (req, res) => {
+  const { query } = req.query;
+  if (!query) return res.status(400).json({ error: 'Missing search query' });
+
+  try {
+    const response = await fetch(
+      `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=8&apiKey=${API_KEY}`
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error('Error searching:', err);
+    res.status(500).json({ error: 'Failed to search recipes' });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

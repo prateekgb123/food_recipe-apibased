@@ -7,33 +7,26 @@ const Home = () => {
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [featured, setFeatured] = useState([]);
-
-  const apiKey = '4d7af7b4f6414f4795564089ea94b1cf'; 
-
   const searchRecipes = async () => {
-    if (!query.trim()) return;
-    try {
-      const res = await fetch(
-        `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=8&apiKey=${apiKey}`
-      );
-      const data = await res.json();
-      setRecipes(data.results || []);
-    } catch (err) {
-      console.error('Search error:', err);
-    }
-  };
+  if (!query.trim()) return;
+  try {
+    const res = await fetch(`/api/search?query=${query}`);
+    const data = await res.json();
+    setRecipes(data.results || []);
+  } catch (err) {
+    console.error('Search error:', err);
+  }
+};
 
-  const fetchFeaturedRecipes = async () => {
-    try {
-      const res = await fetch(
-        `https://api.spoonacular.com/recipes/random?number=6&apiKey=${apiKey}`
-      );
-      const data = await res.json();
-      setFeatured(data.recipes || []);
-    } catch (err) {
-      console.error('Featured fetch error:', err);
-    }
-  };
+const fetchFeaturedRecipes = async () => {
+  try {
+    const res = await fetch('/api/featured');
+    const data = await res.json();
+    setFeatured(data.recipes || []);
+  } catch (err) {
+    console.error('Featured fetch error:', err);
+  }
+};
 
   useEffect(() => {
     fetchFeaturedRecipes();
