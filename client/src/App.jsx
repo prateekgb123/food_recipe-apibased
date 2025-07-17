@@ -5,7 +5,7 @@ import Footer from './Footer';
 import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
-import './App.css'; // Make sure this includes your styles
+import './App.css';
 
 function App() {
   return (

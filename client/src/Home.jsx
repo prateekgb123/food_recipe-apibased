@@ -8,7 +8,7 @@ const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [featured, setFeatured] = useState([]);
 
-  const apiKey = 'daad66ed20794a89bdab432f80652162'; // Use your API key directly here
+  const apiKey = 'daad66ed20794a89bdab432f80652162'; 
 
   const searchRecipes = async () => {
     if (!query.trim()) return;
