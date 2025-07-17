@@ -10,7 +10,7 @@ const Home = () => {
   const searchRecipes = async () => {
   if (!query.trim()) return;
   try {
-    const res = await fetch(`/api/search?query=${query}`);
+    const res = await fetch(`https://food-recipe-apibased.onrender.com/api/search?query=${query}`);
     const data = await res.json();
     setRecipes(data.results || []);
   } catch (err) {
@@ -20,7 +20,7 @@ const Home = () => {
 
 const fetchFeaturedRecipes = async () => {
   try {
-    const res = await fetch('/api/featured');
+    const res = await fetch('https://food-recipe-apibased.onrender.com/api/featured');
     const data = await res.json();
     setFeatured(data.recipes || []);
   } catch (err) {
