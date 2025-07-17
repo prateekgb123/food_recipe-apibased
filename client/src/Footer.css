@@ -9,7 +9,7 @@
   bottom: 0;
   width: 100%;
 }
-/* Responsive tweaks */
+
 @media (max-width: 480px) {
   .footer {
     font-size: 13px;
