@@ -78,6 +78,12 @@
   font-size: 24px;
   color: #ff6600;
 }
+.loading-message {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin: 20px 0;
+}
 
 /* -------- Responsive Adjustments -------- */
 @media (max-width: 480px) {
@@ -106,4 +112,9 @@
     font-size: 20px;
     margin-top: 60px;
   }
+  .loading-message {
+  font-size: 0.7rem;
+  margin: 15px 0;
+}
+
 }

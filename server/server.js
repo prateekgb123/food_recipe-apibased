@@ -4,13 +4,14 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+const API_KEY = process.env.SPOONACULAR_API_KEY;
 
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -56,7 +57,6 @@ app.post('/api/auth/login', async (req, res) => {
     res.status(500).json({ error: 'Login failed' });
   }
 });
-const API_KEY = process.env.SPOONACULAR_API_KEY;
 
 app.get('/api/featured', async (req, res) => {
   try {

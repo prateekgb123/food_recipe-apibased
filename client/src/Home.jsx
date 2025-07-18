@@ -7,26 +7,35 @@ const Home = () => {
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [featured, setFeatured] = useState([]);
-  const searchRecipes = async () => {
-  if (!query.trim()) return;
-  try {
-    const res = await fetch(`https://food-recipe-apibased.onrender.com/api/search?query=${query}`);
-    const data = await res.json();
-    setRecipes(data.results || []);
-  } catch (err) {
-    console.error('Search error:', err);
-  }
-};
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [loadingFeatured, setLoadingFeatured] = useState(false);
 
-const fetchFeaturedRecipes = async () => {
-  try {
-    const res = await fetch('https://food-recipe-apibased.onrender.com/api/featured');
-    const data = await res.json();
-    setFeatured(data.recipes || []);
-  } catch (err) {
-    console.error('Featured fetch error:', err);
-  }
-};
+  const searchRecipes = async () => {
+    if (!query.trim()) return;
+    setLoadingSearch(true);
+    try {
+      const res = await fetch(`https://food-recipe-apibased.onrender.com/api/search?query=${query}`);
+      const data = await res.json();
+      setRecipes(data.results || []);
+    } catch (err) {
+      console.error('Search error:', err);
+    } finally {
+      setLoadingSearch(false);
+    }
+  };
+
+  const fetchFeaturedRecipes = async () => {
+    setLoadingFeatured(true);
+    try {
+      const res = await fetch('https://food-recipe-apibased.onrender.com/api/featured');
+      const data = await res.json();
+      setFeatured(data.recipes || []);
+    } catch (err) {
+      console.error('Featured fetch error:', err);
+    } finally {
+      setLoadingFeatured(false);
+    }
+  };
 
   useEffect(() => {
     fetchFeaturedRecipes();
@@ -54,7 +63,9 @@ const fetchFeaturedRecipes = async () => {
         </button>
       </div>
 
-      {recipes.length > 0 && (
+      {loadingSearch ? (
+        <p className="loading-message">Loading search results...</p>
+      ) : recipes.length > 0 ? (
         <>
           <h3 className="section-heading">Search Results</h3>
           <div className="recipes-grid">
@@ -74,25 +85,29 @@ const fetchFeaturedRecipes = async () => {
             ))}
           </div>
         </>
-      )}
+      ) : null}
 
       <h3 className="section-heading">Featured Recipes</h3>
-      <div className="recipes-grid">
-        {featured.map((f) => (
-          <a
-            key={f.id}
-            href={generateRecipeUrl(f.title, f.id)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="recipe-card-link"
-          >
-            <div className="recipe-card">
-              <img src={f.image} alt={f.title} />
-              <h4>{f.title}</h4>
-            </div>
-          </a>
-        ))}
-      </div>
+      {loadingFeatured ? (
+        <p className="loading-message">Loading featured recipes...</p>
+      ) : (
+        <div className="recipes-grid">
+          {featured.map((f) => (
+            <a
+              key={f.id}
+              href={generateRecipeUrl(f.title, f.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="recipe-card-link"
+            >
+              <div className="recipe-card">
+                <img src={f.image} alt={f.title} />
+                <h4>{f.title}</h4>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
