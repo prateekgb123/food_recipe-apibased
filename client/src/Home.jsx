@@ -41,8 +41,6 @@ const Home = () => {
     fetchFeaturedRecipes();
   }, []);
 
-  if (!user) return <h2 className="please-login">Please login to search recipes</h2>;
-
   const generateRecipeUrl = (title, id) =>
     `https://spoonacular.com/recipes/${title
       .toLowerCase()
@@ -51,41 +49,50 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <div className="search-section">
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search Recipes..."
-          className="search-input"
-        />
-        <button onClick={searchRecipes} className="search-button">
-          Search
-        </button>
-      </div>
+      <h1 className="welcome-title">🍽️ Welcome to Food Recipe Finder!</h1>
+      <p className="welcome-text">Discover amazing recipes. Login to start searching your favorite dishes.</p>
 
-      {loadingSearch ? (
-        <p className="loading-message">Loading search results...</p>
-      ) : recipes.length > 0 ? (
+      {!user ? (
+        <h2 className="please-login">🔒 Please login to search recipes</h2>
+      ) : (
         <>
-          <h3 className="section-heading">Search Results</h3>
-          <div className="recipes-grid">
-            {recipes.map((r) => (
-              <a
-                key={r.id}
-                href={generateRecipeUrl(r.title, r.id)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="recipe-card-link"
-              >
-                <div className="recipe-card">
-                  <img src={r.image} alt={r.title} />
-                  <h4>{r.title}</h4>
-                </div>
-              </a>
-            ))}
+          <div className="search-section">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search Recipes..."
+              className="search-input"
+            />
+            <button onClick={searchRecipes} className="search-button">
+              Search
+            </button>
           </div>
+
+          {loadingSearch ? (
+            <p className="loading-message">Loading search results...</p>
+          ) : recipes.length > 0 ? (
+            <>
+              <h3 className="section-heading">Search Results</h3>
+              <div className="recipes-grid">
+                {recipes.map((r) => (
+                  <a
+                    key={r.id}
+                    href={generateRecipeUrl(r.title, r.id)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="recipe-card-link"
+                  >
+                    <div className="recipe-card">
+                      <img src={r.image} alt={r.title} />
+                      <h4>{r.title}</h4>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </>
+          ) : null}
         </>
-      ) : null}
+      )}
 
       <h3 className="section-heading">Featured Recipes</h3>
       {loadingFeatured ? (
